@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
 
 public class SortedList {
 
@@ -23,8 +24,36 @@ public class SortedList {
 	
     List<String> SortedList = OrginalList.stream().sorted().collect(Collectors.toList());
 	System.out.println(SortedList);
+	
+	Assert.assertEquals(OrginalList, SortedList);
+	
+	
+	List<String> price;
+	
+	
+	do {
+		
+		price = driver.findElements(By.xpath("//tr/td[1]")).stream().filter(s->s.getText().contains("Rice"))
+				.map(s->getPrice(s)).collect(Collectors.toList());
+		
+        price.forEach(a->System.out.println(a));
+        
+        if(price.size()<1) {
+       	 driver.findElement(By.xpath("//a[@aria-label='Next']")).click();
+        }
+		
+	} while(price.size()<1);
+	
 
 
+	}
+	
+	public static String getPrice(WebElement s) {
+		
+		String p = s.findElement(By.xpath("following-sibling::td[1]")).getText();
+		
+		return p;
+		
 	}
 
 }
